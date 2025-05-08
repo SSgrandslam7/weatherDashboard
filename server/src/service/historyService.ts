@@ -33,17 +33,28 @@ class HistoryService {
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
   async getCities(): Promise<City[]> {
     return this.read();
+  }
+  // TODO Define an addCity method that adds a city to the searchHistory.json file
+  async addCity(cityName: string): Promise<City[]> {
+    const cities = await this.read();
+
     if (cities.some( c => c.name.toLowerCase()=== cityName.toLowerCase())){
       return cities;
-    }
   }
+
+  const newCity = new City(cityName);
+  cities.push(newCity);
+  await this.write(cities);
+  return cities;
 }
-  
-  
-  // TODO Define an addCity method that adds a city to the searchHistory.json file
-  // async addCity(city: string) {}
+
   // * BONUS TODO: Define a removeCity method that removes a city from the searchHistory.json file
-  // async removeCity(id: string) {}
+  async removeCity(id: string): Promise<City[]> {
+    let cities = await this.read();
+    cities = cities.filter(city => city.id !== id);
+    await this.write(cities);
+    return cities;
+  }
 }
 
 export default new HistoryService();
