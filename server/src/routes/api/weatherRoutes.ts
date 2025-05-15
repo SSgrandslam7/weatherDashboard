@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
     });
     } catch (error) {
     console.error('Error in POST /:', error);
-    res.status(500).json({ error: 'Service error.' });
+    return res.status(500).json({ error: 'Service error.' });
     }
   }
 );
