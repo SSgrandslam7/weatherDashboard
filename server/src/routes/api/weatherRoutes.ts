@@ -6,47 +6,48 @@ import WeatherService from '../../service/weatherService.js';
 
 // TODO: POST Request with city name to retrieve weather data
 router.post('/', async (req, res) => {
-  try {
     const { city } = req.body;
 
     if (!city) {
       return res.status(400).json({ error: 'City name is required.' });
     }
-  // TODO: GET weather data from city name
-  const weatherData = await WeatherService.getWeatherForCity(city);
 
-  // TODO: save city to search history
-    const updateHistory = await HistoryService.addCity(city);
-    res.json({
-    message: `${city} added to history.`,
-    history: updateHistory,
-    weather: weatherData
+    try {
+      // TODO: GET weather data from city name
+        const weatherData = await WeatherService.getWeatherForCity(city);
+      // TODO: save city to search history
+        const updateHistory = await HistoryService.addCity(city);
+        return res.status(200).json({
+      message: `${city} added to history.`,
+      history: updateHistory,
+      weather: weatherData
     });
-  } catch (error) {
+    } catch (error) {
     console.error('Error in POST /:', error);
-    res.status(500).json({ error: 'Service erro.' });
+    res.status(500).json({ error: 'Service error.' });
+    }
   }
-});
+);
 
 // TODO: GET search history
-router.get('/history', async (req, res) => {
+router.get('/history', async (_req, res) => {
   try {
     const cities = await HistoryService.getCities();
-    res.json(cities);
+    return res.status(200).json(cities);
   } catch (error) {
-    console.error('Error in GET /history:', error);
-    res.status(500).json({ error: 'Server error.' });
+    console.error('GET /history Error:', error);
+    return res.status(500).json({ error: 'Server error.' });
   }
 });
 
 // * BONUS TODO: DELETE city from search history
 router.delete('/history/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
+  try {
     const updatedHistory = await HistoryService.removeCity(id);
 
-    res.json({
+    return res.status(200).json({
       message: `City with ID ${id} removed from history.`,
       history: updatedHistory
     });
