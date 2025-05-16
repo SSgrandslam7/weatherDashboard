@@ -45,7 +45,7 @@ class WeatherService {
   }
 
   private buildWeatherQuery({ lat, lon}: Coordinates): string {
-    return `${this.baseURL}/forecast?lat=${lat}&long=${lon}&appid=${this.apiKey}&units=metric`;
+    return `${this.baseURL}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`;
   }
 
   // TODO: Create destructureLocationData method
