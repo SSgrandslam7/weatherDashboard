@@ -16,18 +16,15 @@ router.post('/', async (req, res) => {
       // TODO: GET weather data from city name
         const weatherData = await WeatherService.getWeatherForCity(city);
       // TODO: save city to search history
-        const updateHistory = await HistoryService.addCity(city);
-        return res.status(200).json({
-      message: `${city} added to history.`,
-      history: updateHistory,
-      weather: weatherData
-    });
+        await HistoryService.addCity(city);
+        const responseArray = [weatherData.currentWeather, ...weatherData.forecast];
+
+        return res.status(200).json(responseArray);
     } catch (error) {
     console.error('Error in POST /:', error);
     return res.status(500).json({ error: 'Service error.' });
     }
-  }
-);
+  });
 
 // TODO: GET search history
 router.get('/history', async (_req, res) => {

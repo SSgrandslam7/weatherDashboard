@@ -35,13 +35,18 @@ API Calls
 */
 
 const fetchWeather = async (cityName: string) => {
-  const response = await fetch('/api/weather/', {
+  const response = await fetch('/api/weather', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ cityName }),
+    body: JSON.stringify({ city: cityName }),
   });
+
+  if (!response.ok) {
+      const text = await response.text();  // Get actual HTML/error
+      throw new Error(`Server error ${response.status}: ${text}`);
+    }
 
   const weatherData = await response.json();
 
