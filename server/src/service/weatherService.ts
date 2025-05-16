@@ -59,9 +59,17 @@ class WeatherService {
   private async fetchLocationData(city: string): Promise<Coordinates> {
     const url = this.buildGeocodeQuery(city);
     const response = await fetch(url);
-    const data = await response.json() as { lat: number; lon: number}[];
 
-    if (!data[0]) {
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`Geocoding API error ${response.status}: ${errText}`);
+      throw new Error(`Failed to fetch location for city: ${city}`);
+    }
+
+    const data = await response.json() as { lat: number; lon: number}[];
+    console.log('Geocoding response:', data);
+
+    if (!Array.isArray(data) || data.length === 0) {
         throw new Error (`No location data found for city: ${city}`);
     }
 
