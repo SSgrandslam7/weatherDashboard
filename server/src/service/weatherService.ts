@@ -12,28 +12,28 @@ interface Coordinates {
 class Weather {
   city: string;
   date: string;
+  icon: string;
   description: string;
   temperature: number;
   humidity: number;
   windSpeed: number;
-  icon: string;
 
   constructor(
     city: string,
     date: string,
+    icon: string,
     description: string,
     temperature: number,
     humidity: number,
     windSpeed: number,
-    icon: string
   ) {
     this.city = city;
     this.date = date;
+    this.icon = icon;
     this.description = description;
     this.temperature = temperature;
     this.humidity = humidity;
     this.windSpeed = windSpeed;
-    this.icon = icon;
   }
 }
 
@@ -48,7 +48,7 @@ class WeatherService {
   }
 
   private buildWeatherQuery({ lat, lon}: Coordinates): string {
-    return `${this.baseURL}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`;
+    return `${this.baseURL}/forecast?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
   }
 
   // TODO: Create destructureLocationData method
@@ -96,12 +96,12 @@ class WeatherService {
   private parseCurrentWeather(data: any): Weather {
     const city = data.city.name;
     const current = data.list[0];
+    const icon = current.weather[0].icon;
     const date = new Date(current.dt * 1000).toLocaleDateString();
     const description = current.weather[0].description;
     const temperature = current.main.temp;
     const humidity = current.main.humidity;
     const windSpeed = current.wind.speed;
-    const icon = current.weather[0].icon;
 
     return new Weather(city, date, icon, description, temperature, humidity, windSpeed);
   }
@@ -117,11 +117,11 @@ class WeatherService {
           return new Weather(
           currentWeather.city,
           date,
+          icon,
           entry.weather[0].description,
           entry.main.temp,
           entry.main.humidity,
           entry.wind.speed,
-          icon
         );
       });
   }
