@@ -16,6 +16,7 @@ class Weather {
   temperature: number;
   humidity: number;
   windSpeed: number;
+  icon: string;
 
   constructor(
     city: string,
@@ -23,7 +24,8 @@ class Weather {
     description: string,
     temperature: number,
     humidity: number,
-    windSpeed: number
+    windSpeed: number,
+    icon: string
   ) {
     this.city = city;
     this.date = date;
@@ -31,6 +33,7 @@ class Weather {
     this.temperature = temperature;
     this.humidity = humidity;
     this.windSpeed = windSpeed;
+    this.icon = icon;
   }
 }
 
@@ -95,11 +98,12 @@ class WeatherService {
     const current = data.list[0];
     const date = new Date(current.dt * 1000).toLocaleDateString();
     const description = current.weather[0].description;
-    const temperature = current.main.temperature;
+    const temperature = current.main.temp;
     const humidity = current.main.humidity;
-    const windSpeed = current.wind.windSpeed;
+    const windSpeed = current.wind.speed;
+    const icon = current.weather[0].icon;
 
-    return new Weather(city, date, description, temperature, humidity, windSpeed);
+    return new Weather(city, date, icon, description, temperature, humidity, windSpeed);
   }
 
   // TODO: Complete buildForecastArray method
@@ -109,13 +113,15 @@ class WeatherService {
       .slice(1, 6)
       .map(entry => {
         const date = new Date(entry.dt * 1000).toLocaleDateString();
-        return new Weather(
+        const icon = entry.weather[0].icon;
+          return new Weather(
           currentWeather.city,
           date,
           entry.weather[0].description,
           entry.main.temp,
           entry.main.humidity,
-          entry.windSpeed
+          entry.wind.speed,
+          icon
         );
       });
   }
