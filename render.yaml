@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: weather-dashboard-api
+    env: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+
+  - type: static
+    name: weather-dashboard-client
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
